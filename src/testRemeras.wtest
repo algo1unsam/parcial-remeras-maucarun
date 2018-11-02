@@ -1,0 +1,48 @@
+import remeras.*
+
+describe "test de remeras" {
+	
+	var remeraLisa = new RemeraLisa (talle=44, color="blanca")
+	var remeraBordada = new RemeraBordada (talle=44, color="blanca", coloresBordado=["verde"])
+	var remeraSublimada = new RemeraSublimada (talle=42, color="gris", alto=10, ancho=15, derechos=100)
+	var flores = new Sucursal (cantidadMinima=10)
+	var avellaneda = new Sucursal (cantidadMinima=3)
+	var pedido1 = new Pedido (tipo=remeraLisa, color="blanca",talle=44,cantidad=100,sucursal=flores)
+	var pedido2 = new Pedido (tipo=remeraBordada, color="blanca",talle=44,cantidad=100,sucursal=avellaneda)
+	
+	test "costo lisa" {
+		assert.equals(110,remeraLisa.costo())
+	}
+
+	test "costo bordada" {
+		assert.equals(130,remeraBordada.costo())
+	}
+
+	test "costo sublimada" {
+		assert.equals(175,remeraSublimada.costoSublimado())
+		assert.equals(275,remeraSublimada.costo())
+	}
+	
+	test "pedido1" {
+		assert.equals(11000,pedido1.precio())
+		assert.equals(1100,pedido1.descuento())
+		assert.equals(9900,pedido1.precioFinal())
+	}
+	
+	test "empresa1" {
+		empresa.nuevoPedido(pedido1)
+		assert.equals(9900,empresa.facturacionTotal())
+		assert.equals([pedido1],empresa.pedidosDeSucursal(flores))
+		assert.equals(9900,empresa.facturacionSucursal(flores))
+	}
+	
+	test "empresa2" {
+		empresa.nuevoPedido(pedido1)
+		empresa.nuevoPedido(pedido2)
+		assert.equals(avellaneda,empresa.sucursalMayorFacturacion())
+		assert.equals(2,empresa.cantPedidosColor("blanca"))
+		assert.equals(pedido2,empresa.pedidoMasCaro())
+		assert.equals([flores,avellaneda],empresa.listaSucursales())
+		assert.equals([44],empresa.tallesPedidosDeSucursal(flores))
+	}
+}
